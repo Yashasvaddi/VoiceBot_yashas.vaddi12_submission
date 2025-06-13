@@ -23,5 +23,5 @@ if __name__ == "__main__":
         if query.lower() == "exit":
             break
         result = qa_chain.invoke({"query": query})
-        print("Answer:", result["result"])
+        print("Answers:", result["result"])
         print("\n")
