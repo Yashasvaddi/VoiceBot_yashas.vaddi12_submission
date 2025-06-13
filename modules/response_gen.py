@@ -24,7 +24,7 @@ if __name__ == "__main__":
         prompt = f"""Context:
                     {context}
                     Remember: {remember} 
-                    Question: i{query}"""
+                    Question: i{query}""
                     
         ans = model.generate_content(f"From this extract only that part which a sales executive would say, {prompt}")
         response = model.generate_content(ans.text)
