@@ -7,7 +7,7 @@ import google.generativeai as genai
 def translate(answer):
     genai.configure(api_key="AIzaSyC3vNkSnEJl-eFloSm9M4Bw0F_cJv2vusY")
     model=genai.GenerativeModel("gemini-2.0-flash")
-    val=model.generate_content(f"Translate this to english: {answer}")
+    val=model.generate_content(f"Translate this to english and also fix any grammatical errors: {answer}")
     print(f"\n\n\n\n{val.text}")
 
 def convert_mp3_to_wav(mp3_path, wav_path):

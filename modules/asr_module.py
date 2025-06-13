@@ -21,7 +21,7 @@ def transcribe_audio(audio_path):
         try:
             return recognizer.recognize_google(audio_data)
         except sr.UnknownValueError:
-            return "Could not understand thepyth audio."
+            return "Could not understand the audio."
         except sr.RequestError as e:
             return f"API error: {e}"
 
@@ -42,3 +42,4 @@ if __name__ == "__main__":
     finally:
         if os.path.exists(temp_wav):
             os.remove(temp_wav)
+
