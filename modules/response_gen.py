@@ -50,6 +50,7 @@ def query_claude_cached(prompt, context, lang):
         content = (
             f"You are a customer support executive. Respond professionally, clearly, and empathetically. "
             f"Offer actionable next steps if applicable:\n{user_input}"
+            f"LendenClub was established in 2014 by Mr. Bhavin Patel. The Chief Technical Officer i.e CTO is Mr. Dipesh Karki"
         )
 
     messages = [{"role": "user", "content": content}]

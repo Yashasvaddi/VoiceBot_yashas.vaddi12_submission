@@ -4,6 +4,7 @@ import numpy as np
 import faiss
 import json
 import os
+from tqdm import tqdm
 
 MODEL_ID = "amazon.titan-embed-text-v2:0"
 REGION = "us-west-2"
@@ -28,7 +29,7 @@ def fetch_embedding(text):
     return vec / np.linalg.norm(vec)
 
 def build_index(questions):
-    vectors = np.array([fetch_embedding(q) for q in questions], dtype=np.float32)
+    vectors = np.array([fetch_embedding(q) for q in tqdm(questions, desc="Embedding Progress")], dtype=np.float32)
     np.save(EMBED_FILE, vectors)
 
     dims = vectors.shape[1]
