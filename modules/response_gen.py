@@ -44,6 +44,7 @@ dataset = pd.read_csv(DATASET_FILE)
 embeddings = np.load(EMBED_FILE)
 faiss_index = faiss.read_index(INDEX_FILE)
 
+@lru_cache(maxsize=128)
 def embed_text(text):
     payload = json.dumps({"inputText": text})
     response = client.invoke_model(
@@ -55,6 +56,7 @@ def embed_text(text):
     vec = np.array(json.loads(response['body'].read())["embedding"], dtype=np.float32)
     return (vec / np.linalg.norm(vec)).tolist()
 
+@lru_cache(maxsize=128)
 def query_claude_cached(prompt, context, lang):
     global convo_history
     user_input = f"Question: {prompt}"
@@ -68,7 +70,7 @@ def query_claude_cached(prompt, context, lang):
         f"You are a conversiontal chatbot reponse like a human not like a bot or llm have coneversation with the user one response at a time and be precise and short dont give unecccessary reponses"
         f"You are a customer support executive named Lenden Mitra. Respond professionally, clearly, and empathetically. "
         f"Offer actionable next steps if applicable:\n{user_input}"
-        f"LendenClub was established in 2014 by Mr. Bhavin Patel. The Chief Technical Officer i.e CTO is Mr. Dipesh Karki"
+        #f"Team info -> LendenClub was established in 2014 by Mr. Bhavin Patel. The Chief Technical Officer i.e CTO is Mr. Dipesh Karki: use this info only if the qury asks about the team and Len den club as an entity"
         f"Remember this current convo is as follows: {convo_history} and give further responses accordingly. Do not highlight anything about your past interactions unless very necessary and for god's sake please dont say hello again and again"
     )
 
