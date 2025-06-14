@@ -41,7 +41,6 @@ dataset = pd.read_csv(DATASET_FILE)
 embeddings = np.load(EMBED_FILE)
 faiss_index = faiss.read_index(INDEX_FILE)
 
-@lru_cache(maxsize=128)
 def embed_text(text):
     payload = json.dumps({"inputText": text})
     response = client.invoke_model(
@@ -53,7 +52,6 @@ def embed_text(text):
     vec = np.array(json.loads(response['body'].read())["embedding"], dtype=np.float32)
     return (vec / np.linalg.norm(vec)).tolist()
 
-@lru_cache(maxsize=128)
 def query_claude_cached(prompt, context, lang):
     user_input = f"Question: {prompt}"
     if context:
@@ -65,6 +63,7 @@ def query_claude_cached(prompt, context, lang):
         content = f"आप एक ग्राहक सेवा सहायक हैं। कृपया प्रश्न का उत्तर हिंदी में दें: {user_input} उत्तर:"
     else:
         content = (
+            f"You are a conversiontal chatbot reponse like a human not like a bot or llm have coneversation with the user one response at a time and be precise and short dont give unecccessary reponses"
             f"You are a customer support executive named Lenden Mitra. Respond professionally, clearly, and empathetically. "
             f"Offer actionable next steps if applicable:\n{user_input}"
             f"LendenClub was established in 2014 by Mr. Bhavin Patel. The Chief Technical Officer i.e CTO is Mr. Dipesh Karki"
