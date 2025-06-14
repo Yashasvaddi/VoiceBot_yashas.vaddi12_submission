@@ -8,12 +8,17 @@ from tqdm import tqdm
 
 MODEL_ID = "amazon.titan-embed-text-v2:0"
 REGION = "us-west-2"
-DATASET_PATH = "./data/qa_dataset.csv"
-OUTPUT_DIR = "./embeddings"
-EMBED_FILE = os.path.join(OUTPUT_DIR, "vectors.npy")
-INDEX_FILE = os.path.join(OUTPUT_DIR, "index.faiss")
+# DATASET_PATH = "./data/qa_dataset.csv"
+# OUTPUT_DIR = "./embeddings"
+# EMBED_FILE = os.path.join(OUTPUT_DIR, "vectors.npy")
+# INDEX_FILE = os.path.join(OUTPUT_DIR, "index.faiss")
 
-os.makedirs(OUTPUT_DIR, exist_ok=True)
+# os.makedirs(OUTPUT_DIR, exist_ok=True)
+
+
+EMBED_FILE = "C:\\New folder\\codes\\college stuff\\VoiceBot_yashas.vaddi12_submission\\embeddings\\vectors.npy"
+INDEX_FILE = "C:\\New folder\\codes\\college stuff\\VoiceBot_yashas.vaddi12_submission\\embeddings\\index.faiss"
+DATASET_PATH = "C:\\New folder\\codes\college stuff\\VoiceBot_yashas.vaddi12_submission\\data\\qa_dataset.csv"
 
 client = boto3.client("bedrock-runtime", region_name=REGION)
 

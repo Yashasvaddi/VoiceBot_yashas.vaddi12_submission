@@ -1,0 +1,9 @@
+boto3==1.38.36
+faiss_cpu==1.11.0
+langdetect==1.0.9
+numpy==2.3.0
+pandas==2.3.0
+pydub==0.25.1
+SpeechRecognition==3.14.1
+streamlit==1.42.0
+tqdm==4.67.1
