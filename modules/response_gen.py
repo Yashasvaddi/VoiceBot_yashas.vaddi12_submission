@@ -10,17 +10,20 @@ import google.generativeai as genai
 
 
 def translate(ans):
-    genai.configure(api_key="AIzaSyC3vNkSnEJl-eFloSm9M4Bw0F_cJv2vusY")
-    model = genai.GenerativeModel("gemini-2.0-flash")
+    genai.configure(api_key="AIzaSyC3vNkSnEJl-eFloSm9M4Bw0F_cJv2vusY")#type:ignore
+    model = genai.GenerativeModel("gemini-2.0-flash")#type:ignore
 
 
-    text=model.generate_content(f"Is the given audio/text sample {ans} in hindi or english. Only say 'HIN' if hindi and 'ENG' if english")
+    text=model.generate_content(f"Is the given audio/text sample {ans} in hindi language and english script than only say 'HIN' if and 'ENG' if english")
 
     val=text.text
 
     print(val)
+    
+    return val
 
 
+convo_history=""
 
 # Directory and file paths
 EMBED_FILE = "./embeddings/vectors.npy"
@@ -53,21 +56,21 @@ def embed_text(text):
     return (vec / np.linalg.norm(vec)).tolist()
 
 def query_claude_cached(prompt, context, lang):
+    global convo_history
     user_input = f"Question: {prompt}"
     if context:
         if translate(user_input)=="HIN":
-            user_input = f"I have this information: {context}. Based on this, answer: {prompt} in hindi. Never use devnagari script"
+            user_input = f"I have this information: {context}. Based on this, answer: {prompt} in hindi with english script. Never use devnagari script"
         else:
             user_input = f"I have this information: {context}. Based on this, answer: {prompt}"
-    if lang == "hi":
-        content = f"आप एक ग्राहक सेवा सहायक हैं। कृपया प्रश्न का उत्तर हिंदी में दें: {user_input} उत्तर:"
-    else:
-        content = (
-            f"You are a conversiontal chatbot reponse like a human not like a bot or llm have coneversation with the user one response at a time and be precise and short dont give unecccessary reponses"
-            f"You are a customer support executive named Lenden Mitra. Respond professionally, clearly, and empathetically. "
-            f"Offer actionable next steps if applicable:\n{user_input}"
-            f"LendenClub was established in 2014 by Mr. Bhavin Patel. The Chief Technical Officer i.e CTO is Mr. Dipesh Karki"
-        )
+
+    content = (
+        f"You are a conversiontal chatbot reponse like a human not like a bot or llm have coneversation with the user one response at a time and be precise and short dont give unecccessary reponses"
+        f"You are a customer support executive named Lenden Mitra. Respond professionally, clearly, and empathetically. "
+        f"Offer actionable next steps if applicable:\n{user_input}"
+        f"LendenClub was established in 2014 by Mr. Bhavin Patel. The Chief Technical Officer i.e CTO is Mr. Dipesh Karki"
+        f"Remember this current convo is as follows: {convo_history} and give further responses accordingly. Do not highlight anything about your past interactions unless very necessary and for god's sake please dont say hello again and again"
+    )
 
     messages = [{"role": "user", "content": content}]
 
@@ -119,4 +122,6 @@ if __name__ == "__main__":
         if question_input.lower() == 'exit':
             break
         answer, origin, score = generate_response(question_input)
+        convo_history=convo_history+answer
         print(f"Answer ({origin}, {score}% confidence):\n{answer}")
+        print("")
