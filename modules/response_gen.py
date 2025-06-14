@@ -12,11 +12,6 @@ EMBED_FILE = "./embeddings/vectors.npy"
 INDEX_FILE = "./embeddings/index.faiss"
 DATASET_FILE = "./data/qa_dataset.csv"
 
-
-# EMBED_FILE = "C:\\New folder\\codes\\college stuff\\VoiceBot_yashas.vaddi12_submission\\embeddings\\vectors.npy"
-# INDEX_FILE = "C:\\New folder\\codes\\college stuff\\VoiceBot_yashas.vaddi12_submission\\embeddings\\index.faiss"
-# DATASET_FILE = "C:\\New folder\\codes\college stuff\\VoiceBot_yashas.vaddi12_submission\\data\\qa_dataset.csv"
-
 # Constants
 TEXT_EMBED_MODEL = "amazon.titan-embed-text-v2:0"
 CLAUDE_MODEL = "anthropic.claude-3-sonnet-20240229-v1:0"
