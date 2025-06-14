@@ -1,62 +1,43 @@
-import os
-from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain_community.vectorstores import FAISS
-from langchain_huggingface.embeddings import HuggingFaceEmbeddings
-from langchain.docstore.document import Document
-import os
+import boto3
+import pandas as pd
+import numpy as np
+import faiss
 import json
-import PyPDF2
+import os
 
-def load_text_file(dir):
-    all_text = []
-    
-    for file in os.listdir(dir):
-        file_path = os.path.join(dir, file)
-        if os.path.isfile(file_path):
-            _, ext = os.path.splitext(file_path)
-            ext = ext.lower()
-            if ext == '.json':
-                with open(file_path, 'r', encoding='utf-8') as f:
-                    data = json.load(f)
-                    all_text.append(json.dumps(data))
-            elif ext == '.txt':
-                with open(file_path, 'r', encoding='utf-8') as f:
-                    all_text.append(f.read())
-            elif ext == '.pdf':
-                with open(file_path, 'rb') as f:
-                    reader = PyPDF2.PdfReader(f)
-                    pdf_text = ''
-                    for page in reader.pages:
-                        pdf_text += page.extract_text() or ''
-                    all_text.append(pdf_text)
-    return "\n".join(all_text)
+MODEL_ID = "amazon.titan-embed-text-v2:0"
+REGION = "us-west-2"
+DATASET_PATH = "./data/qa_dataset.csv"
+OUTPUT_DIR = "./embeddings"
+EMBED_FILE = os.path.join(OUTPUT_DIR, "vectors.npy")
+INDEX_FILE = os.path.join(OUTPUT_DIR, "index.faiss")
 
+os.makedirs(OUTPUT_DIR, exist_ok=True)
 
-def create_documents_from_text(text):
-    return [Document(page_content=text)]
+client = boto3.client("bedrock-runtime", region_name=REGION)
 
-
-def split_documents(documents, chunk_size=500, chunk_overlap=50):
-    splitter = RecursiveCharacterTextSplitter(
-        chunk_size=chunk_size,
-        chunk_overlap=chunk_overlap
+def fetch_embedding(text):
+    payload = json.dumps({"inputText": text})
+    resp = client.invoke_model(
+        modelId=MODEL_ID,
+        body=payload,
+        accept="application/json",
+        contentType="application/json"
     )
-    return splitter.split_documents(documents)
+    vec = np.array(json.loads(resp['body'].read())["embedding"], dtype=np.float32)
+    return vec / np.linalg.norm(vec)
 
+def build_index(questions):
+    vectors = np.array([fetch_embedding(q) for q in questions], dtype=np.float32)
+    np.save(EMBED_FILE, vectors)
 
-def embed_and_store(docs, persist_directory="./embeddings"):
-    embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/multi-qa-MiniLM-L6-cos-v1")
-    vectorstore = FAISS.from_documents(docs, embeddings)
-    vectorstore.save_local(persist_directory)
+    dims = vectors.shape[1]
+    idx = faiss.IndexFlatL2(dims)
+    idx.add(vectors) #type:ignore
+    faiss.write_index(idx, INDEX_FILE)
 
+    print("Index and embeddings stored successfully.")
 
 if __name__ == "__main__":
-    data_path = "./data/TrainingSet"
-    output_path = "./embeddings"
-
-    text = load_text_file(data_path)
-    documents = create_documents_from_text(text)
-    split_docs = split_documents(documents)
-    embed_and_store(split_docs, output_path)
-
-    print(f"FAISS index saved to: {output_path}")
+    dataset = pd.read_csv(DATASET_PATH)
+    build_index(dataset["Question"].tolist())
