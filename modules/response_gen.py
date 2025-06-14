@@ -7,7 +7,9 @@ import os
 from langdetect import detect
 from functools import lru_cache
 import google.generativeai as genai
+from collections import deque 
 
+dq=deque()
 
 def translate(ans):
     genai.configure(api_key="AIzaSyC3vNkSnEJl-eFloSm9M4Bw0F_cJv2vusY")#type:ignore
@@ -61,12 +63,13 @@ def query_claude_cached(prompt, context, lang):
     global convo_history
     user_input = f"Question: {prompt}"
     if context:
-        if translate(user_input)=="HIN":
-            user_input = f"I have this information: {context}. Based on this, answer: {prompt} in hindi with english script. Never use devnagari script"
-        else:
-            user_input = f"I have this information: {context}. Based on this, answer: {prompt}"
+        # if translate(user_input)=="HIN":
+        #     user_input = f"I have this information: {context}. Based on this, answer: {prompt} in hindi with english script. Never use script that looks like this 'मेरे'"
+        # else:
+        user_input = f"I have this information: {context}. Based on this, answer: {prompt}"
 
     content = (
+        f"If you want to respond in hindi, always use **Romanized Hindi** i.e Hindi written in English Letters, not in Devnagari Script. Do not use Hindi script (नमस्ते), instead use Hinglish (namaste)."
         f"You are a conversiontal chatbot reponse like a human not like a bot or llm have coneversation with the user one response at a time and be precise and short dont give unecccessary reponses"
         f"You are a customer support executive named Lenden Mitra. Respond professionally, clearly, and empathetically. "
         f"Offer actionable next steps if applicable:\n{user_input}"
@@ -124,6 +127,11 @@ if __name__ == "__main__":
         if question_input.lower() == 'exit':
             break
         answer, origin, score = generate_response(question_input)
-        convo_history=convo_history+answer
+        dq.append(answer)
+        if len(dq)>4:
+            dq.popleft()
+        for i in dq:
+            convo_history=convo_history+i
         print(f"Answer ({origin}, {score}% confidence):\n{answer}")
         print("")
+        convo_history=" "
