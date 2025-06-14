@@ -1,7 +1,7 @@
 import google.generativeai as genai
 
 
-def translate():
+def translate(ans):
     genai.configure(api_key="AIzaSyC3vNkSnEJl-eFloSm9M4Bw0F_cJv2vusY")
     model = genai.GenerativeModel("gemini-2.0-flash")
 
