@@ -6,6 +6,23 @@ import faiss
 import os
 from langdetect import detect
 from functools import lru_cache
+import google.generativeai as genai
+
+
+def translate(ans):
+    genai.configure(api_key="AIzaSyC3vNkSnEJl-eFloSm9M4Bw0F_cJv2vusY")
+    model = genai.GenerativeModel("gemini-2.0-flash")
+
+
+    text=model.generate_content(f"Is the given audio/text sample {ans} in hindi or english. Reply 1 if hindi and 0 for english")
+
+    val=text.text
+
+    final=int(val)
+
+    print(final)
+
+
 
 # Directory and file paths
 EMBED_FILE = "./embeddings/vectors.npy"
@@ -42,8 +59,10 @@ def embed_text(text):
 def query_claude_cached(prompt, context, lang):
     user_input = f"Question: {prompt}"
     if context:
-        user_input = f"I have this information: {context}. Based on this, answer: {prompt}"
-        
+        if translate(user_input):
+            user_input = f"I have this information: {context}. Based on this, answer: {prompt} in hindi. Never use devnagari script"
+        else:
+            user_input = f"I have this information: {context}. Based on this, answer: {prompt}"
     if lang == "hi":
         content = f"आप एक ग्राहक सेवा सहायक हैं। कृपया प्रश्न का उत्तर हिंदी में दें: {user_input} उत्तर:"
     else:
