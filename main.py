@@ -13,7 +13,6 @@ if st.button("Get Response", key="single_query"):
         with st.spinner("Generating response..."):
             response, source, confidence = generate_response(query)
             st.write(f"**Response:** {response}")
-            st.write(f"**Source:** {source} (Confidence: {confidence}%)")
     else:
         st.warning("Please enter a question")
 
