@@ -1,19 +1,29 @@
 import pandas as pd
+from modules.response_gen import generate_response
 
 # Load the CSV file
-input_file = "lendenclub_100_faq.csv"
-df = pd.read_csv(input_file)
+df = pd.read_csv("lendenclub_100_faq.csv")
 
-# Dummy function to simulate your model's response generation
-def generate_response(question):
-    # Replace this with your actual model call (e.g., Claude, Bedrock, etc.)
-    return f"Generated response for: {question}"
+# Determine question column name
+question_col = "Questions" if "Questions" in df.columns else "Question"
 
-# Generate responses and add to new column
-df["Model_Response"] = df["Question"].apply(generate_response)
+# Process each question and store results
+responses = []
+sources = []
+confidences = []
 
-# Save to new CSV
+for question in df[question_col]:
+    response, source, confidence = generate_response(question)
+    responses.append(response)
+    sources.append(source)
+    confidences.append(confidence)
+
+# Add results to dataframe
+df["Model_Response"] = responses
+df["Response_Source"] = sources
+df["Confidence"] = confidences
+
+# Save to CSV
 output_file = "lendenclub_100_faq_with_responses.csv"
 df.to_csv(output_file, index=False)
-
 print(f"File saved as {output_file}")
