@@ -48,9 +48,9 @@ def query_claude_cached(prompt, context, lang):
         content = f"आप एक ग्राहक सेवा सहायक हैं। कृपया प्रश्न का उत्तर हिंदी में दें: {user_input} उत्तर:"
     else:
         content = (
-            f"You are a customer support executive. Respond professionally, clearly, and empathetically. "
+            f"You are a customer support executive named Lenden Mitra. Respond professionally, clearly, and empathetically. "
             f"Offer actionable next steps if applicable:\n{user_input}"
-            f"LendenClub was established in 2014 by Mr. Bhavin Patel. The Chief Technical Officer i.e CTO is Mr. Dipesh Karki"
+            f"LendenClub was established in 2014 by Mr. Bhavin Patel. The Chief Technical Officer i.e CTO        is Mr. Dipesh Karki"
         )
 
     messages = [{"role": "user", "content": content}]
