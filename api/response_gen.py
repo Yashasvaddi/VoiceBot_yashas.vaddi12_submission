@@ -23,8 +23,8 @@ EMBEDDINGS_DIR=os.path.join(DATA_DIR, "../embeddings")
 
 
 DATASET_FILE = os.path.join(DATA_DIR, "qa_dataset.csv")
-EMBED_FILE = os.path.join(EMBEDDINGS_DIR, "qa_embeddings.npy")
-INDEX_FILE = os.path.join(EMBEDDINGS_DIR, "qa_faiss_index.bin")
+EMBED_FILE = os.path.join(EMBEDDINGS_DIR, "vectors.npy")
+INDEX_FILE = os.path.join(EMBEDDINGS_DIR, "index.faiss")
 
 
 
