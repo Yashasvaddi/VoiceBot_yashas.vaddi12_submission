@@ -42,15 +42,11 @@ if uploaded_file is not None:
                 status_text.text(f"Processing question {i+1}/{len(df)}")
                 response, source, confidence = generate_response(question)
                 responses.append(response)
-                sources.append(source)
-                confidences.append(confidence)
                 progress_bar.progress((i + 1) / len(df))
             
             # Add results to dataframe
-            df["Model_Response"] = responses
-            df["Response_Source"] = sources
-            df["Confidence"] = confidences
-            
+            df["Responses"] = responses
+          
             # Display results
             st.success("Processing complete!")
             st.dataframe(df)
@@ -60,7 +56,7 @@ if uploaded_file is not None:
             st.download_button(
                 "Download Results",
                 csv,
-                "results_with_responses.csv",
+                "yashas.vaddi12_submissions.csv",
                 "text/csv",
                 key="download-csv"
             )
