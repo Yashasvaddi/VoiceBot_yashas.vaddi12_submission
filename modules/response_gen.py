@@ -14,6 +14,9 @@ from io import BytesIO
 import speech_recognition as sr
 import threading as th
 from queue import Queue
+from langdetect import DetectorFactory
+DetectorFactory.seed = 0
+
 
 # === Configuration ===
 EMBED_FILE = "./embeddings/vectors.npy"
