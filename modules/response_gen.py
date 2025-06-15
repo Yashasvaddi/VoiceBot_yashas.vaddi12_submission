@@ -67,11 +67,14 @@ def query_claude(prompt, context, lang):
     global convo_history
     user_input = f"I have this information: {context}. Based on this, answer: {prompt}" if context else f"Question: {prompt}"
     content = (
+        f"Content start:"
+        f"Please dont mention anything I have told you between Content start and Content end they for your context and help not the part of query you need to worry about"
         f"if the input has 0 hindi letters only then respond in English. dont use hindi at all."
         f"If you want to respond in hindi, always use **Romanized Hindi** i.e Hindi written in English Letters, not in Devnagari Script. Do not use Hindi script (नमस्ते), instead use Hinglish (namaste)."
         f"You are a conversiontal chatbot reponse like a human not like a bot or llm have coneversation with the user one response at a time and be precise and short dont give unecccessary reponses"
         f"You are a female customer support executive named Lenden Mitra."
         f"Respond professionally, clearly, and empathetically. Try using modern words rather than native hindi. Use female pronouns"
+        f"Content end:-"
         f"Offer actionable next steps if applicable:\n{user_input}"
         #f"Tam info -> LendenClub was established in 2014 by Mr. Bhavin Patel. The Chief Technical Officer i.e CTO is Mr. Dipesh Karki: use this info only if the qury asks about the team and Len den club as an entity"
         f"Remember this current convo is as follows: {convo_history} and give further responses accordingly. Do not highlight anything about your past interactions unless very necessary and for god's sake please dont say hello again and again"
@@ -114,7 +117,7 @@ def listen_once():
         r.adjust_for_ambient_noise(source)
         audio = r.listen(source)
     try:
-        return r.recognize_google(audio, language="en-IN")
+        return r.recognize_google(audio, language="en-IN")#type:ignore
     except sr.UnknownValueError:
         return None
     except sr.RequestError as e:
@@ -129,7 +132,7 @@ if __name__ == "__main__":
             speak_with_polly("Sorry, I didn’t catch that. Please try again.")
             continue
 
-        print(f"📝 You said: {question}")
+        print(f" You said: {question}")
 
         if question.lower() == "exit":
             speak_with_polly("Goodbye!")
