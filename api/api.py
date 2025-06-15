@@ -5,7 +5,7 @@ from pydantic import BaseModel
 import pandas as pd
 import io
 import numpy as np
-from modules.response_gen import generate_response
+from response_gen import generate_response
 import uvicorn
 
 app = FastAPI(title="LenDen Mitra API")
