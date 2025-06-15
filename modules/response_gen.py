@@ -14,8 +14,20 @@ from io import BytesIO
 import speech_recognition as sr
 import threading as th
 from queue import Queue
-from langdetect import DetectorFactory
+from langdetect import detect, DetectorFactory, LangDetectException
+
+# Ensure profiles are loaded and results are deterministic
 DetectorFactory.seed = 0
+
+def safe_detect(text):
+    try:
+        if not text or len(text.strip()) < 3:
+            return 'en'  # fallback for short/empty queries
+        return detect(text)
+    except LangDetectException:
+        return 'en'
+
+
 
 
 # === Configuration ===
@@ -102,7 +114,7 @@ def query_claude(prompt, context, lang):
     return "I'm sorry, I couldn't generate a response."
 
 def generate_response(query):
-    lang = detect(query)
+    lang = safe_detect(query)
     query_vector = np.array(embed_text(query)).reshape(1, -1)
     distances, idxs = faiss_index.search(query_vector, k=1)
     dist, idx = distances[0][0], idxs[0][0]
