@@ -15,6 +15,19 @@ import speech_recognition as sr
 import threading as th
 from queue import Queue
 from langdetect import detect, DetectorFactory, LangDetectException
+import os
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DATA_DIR = os.path.join(BASE_DIR, "../data")
+EMBEDDINGS_DIR=os.path.join(DATA_DIR, "../embeddings")
+
+
+DATASET_FILE = os.path.join(DATA_DIR, "qa_dataset.csv")
+EMBED_FILE = os.path.join(EMBEDDINGS_DIR, "qa_embeddings.npy")
+INDEX_FILE = os.path.join(EMBEDDINGS_DIR, "qa_faiss_index.bin")
+
+
+
 
 # Ensure profiles are loaded and results are deterministic
 DetectorFactory.seed = 0
@@ -31,9 +44,9 @@ def safe_detect(text):
 
 
 # === Configuration ===
-EMBED_FILE = "./embeddings/vectors.npy"
-INDEX_FILE = "./embeddings/index.faiss"
-DATASET_FILE = "./data/qa_dataset.csv"
+# EMBED_FILE = "./embeddings/vectors.npy"
+# INDEX_FILE = "./embeddings/index.faiss"
+# DATASET_FILE = "./data/qa_dataset.csv"
 REGION = "us-west-2"
 TEXT_EMBED_MODEL = "amazon.titan-embed-text-v2:0"
 CLAUDE_MODEL = "anthropic.claude-3-sonnet-20240229-v1:0"
