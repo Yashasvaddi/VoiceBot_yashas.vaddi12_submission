@@ -1,8 +1,8 @@
 import pandas as pd
-from modules.response_gen import generate_response
+from response_gen import generate_response
 
 # Load the CSV file
-df = pd.read_csv("test.csv")
+df = pd.read_csv("C:\\New folder\\codes\\college stuff\\VoiceBot_yashas.vaddi12_submission\\modules\\test.csv")
 
 # Determine question column name
 question_col = "Questions" if "Questions" in df.columns else "Question"
