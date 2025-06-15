@@ -1,0 +1,14 @@
+boto3==1.38.36
+faiss_cpu==1.11.0
+fastapi==0.115.12
+langdetect==1.0.9
+modules==1.0.0
+numpy==2.3.0
+pandas==2.3.0
+protobuf==6.31.1
+pydantic==2.11.7
+pydub==0.25.1
+Requests==2.32.4
+SpeechRecognition==3.14.1
+uvicorn==0.34.3
+google-generativeai==0.3.1
